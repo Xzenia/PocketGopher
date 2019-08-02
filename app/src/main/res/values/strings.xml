@@ -3,4 +3,5 @@
     <string name="search_button">Search</string>
     <string name="booksmarks_file">com.gmail.afonsotrepa.pocketgopher.BOOKMARKS_FILE_KEY</string>
     <string name="settings_file">com.gmail.afonsotrepa.pocketgopher.SETTINGS_FILE</string>
+    <string name="url_field_empty">URL field is empty!</string>
 </resources>

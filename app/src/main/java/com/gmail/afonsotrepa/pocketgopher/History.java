@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.util.List;
 public abstract class History
 {
     private static final String HISTORY_FILE = "history_file";
-
 
     /**
      * save/add a page/url to the history
@@ -39,6 +37,7 @@ public abstract class History
 
             outputStream.write(url.getBytes());
             outputStream.write("\n".getBytes());
+
             outputStream.close();
         }
         catch (IOException e)
@@ -56,10 +55,8 @@ public abstract class History
     {
         try
         {
-
             FileInputStream inputStream = context.openFileInput(HISTORY_FILE);
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
-
 
             //read the page(s) from the file
             List<String> visited = new ArrayList<>();
@@ -68,6 +65,9 @@ public abstract class History
             {
                 visited.add(0, received);
             }
+
+            bufferedreader.close();
+            inputStream.close();
 
             return visited;
         }
@@ -93,8 +93,20 @@ public abstract class History
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        File file = new File(HISTORY_FILE);
-                        file.delete();
+                        try
+                        {
+                            FileOutputStream outputStream = context.openFileOutput(HISTORY_FILE,
+                                    Context.MODE_PRIVATE
+                            );
+                            //Overwrites the file with nothing. "Deleting" it in the process.
+                            outputStream.write(0);
+
+                            outputStream.close();
+                        }
+                        catch (IOException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
 
                         ((Activity) context).recreate();
                     }

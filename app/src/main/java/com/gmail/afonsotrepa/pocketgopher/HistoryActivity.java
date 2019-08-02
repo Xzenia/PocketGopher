@@ -75,7 +75,6 @@ public class HistoryActivity extends AppCompatActivity
         {
             case R.id.clearHistory:
                 History.clear(this);
-
                 return true;
 
             default:

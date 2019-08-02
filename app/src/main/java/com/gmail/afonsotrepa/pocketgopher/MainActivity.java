@@ -1,6 +1,7 @@
 package com.gmail.afonsotrepa.pocketgopher;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
@@ -249,13 +251,18 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(final DialogInterface dialog, int which)
                             {
                                 //setup the page
-                                Page page = Page.makePage(input.getText().toString());
-
-                                page.open(MainActivity.this);
+                                if (input.getText().toString().trim().length() > 0)
+                                {
+                                    Page page = Page.makePage(input.getText().toString());
+                                    page.open(MainActivity.this);
+                                }
+                                else
+                                {
+                                    showToast(getApplicationContext(), "URL field is empty!");
+                                }
                             }
                         }
                 );
-
 
                 alertDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener()
@@ -282,5 +289,11 @@ public class MainActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showToast(Context context, String message)
+    {
+        Toast.makeText(context, "URL field must not be empty!", Toast.LENGTH_SHORT)
+                .show();
     }
 }
