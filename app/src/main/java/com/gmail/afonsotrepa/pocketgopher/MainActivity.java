@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+
         if (sharedPreferences.getInt(MONOSPACE_FONT_SETTING, 1) == 1)
         {
             font = R.style.monospace;
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity
                     .add(this);
             new Bookmark(this, "SDF", "sdf.org").add(this);
             new Bookmark(this, "Khzae", "khzae.net").add(this);
+            new Bookmark(this, "Cosmic Voyage", "cosmic.voyage:70/1").add(this);
         }
 
         Intent intent = getIntent();
@@ -101,18 +106,22 @@ public class MainActivity extends AppCompatActivity
         ListView listView = findViewById(R.id.listView);
 
         //make an array holding the bookmarks (used to make the adapter)
-        Bookmark[] bookmarksarray = new Bookmark[bookmarks.size()];
-        bookmarksarray = bookmarks.toArray(bookmarksarray);
+        Bookmark[] bookmarksArray = new Bookmark[bookmarks.size()];
+        bookmarksArray = bookmarks.toArray(bookmarksArray);
 
         //make the adapter
         BookmarkAdapter adapter = new BookmarkAdapter(
                 this,
                 R.layout.activity_listview,
-                bookmarksarray
+                bookmarksArray
         );
 
         //apply it to listView
         listView.setAdapter(adapter);
+
+        listView.setDivider(new ColorDrawable(Color.parseColor("#FFFFFF")));
+
+        listView.setDividerHeight(2);
 
         //make the items clickable (open the page/bookmark when clicked)
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -139,9 +148,7 @@ public class MainActivity extends AppCompatActivity
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
-                    id
-            )
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
             {
                 ((Bookmark) parent.getItemAtPosition(position)).editBookmark(MainActivity.this);
 
@@ -171,6 +178,7 @@ public class MainActivity extends AppCompatActivity
         {
             menu.findItem(R.id.monospace_font).setChecked(false);
         }
+
         editor.apply();
 
         return super.onCreateOptionsMenu(menu);
@@ -179,12 +187,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         switch (item.getItemId())
         {
             case R.id.monospace_font:
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 if (font == R.style.serif)
                 {

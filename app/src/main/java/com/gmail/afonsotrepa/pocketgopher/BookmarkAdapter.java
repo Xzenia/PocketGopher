@@ -9,11 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
-/**
- *
- */
-
 public class BookmarkAdapter extends ArrayAdapter<Bookmark>
 {
     public BookmarkAdapter(Context context, int textViewResourceId)
@@ -34,6 +29,7 @@ public class BookmarkAdapter extends ArrayAdapter<Bookmark>
         if (convertView == null)
         {
             LayoutInflater vi = LayoutInflater.from(getContext());
+
             convertView = vi.inflate(R.layout.activity_listview, null);
         }
 
@@ -46,6 +42,14 @@ public class BookmarkAdapter extends ArrayAdapter<Bookmark>
 
         //display the name of the bookmark
         textView.setText(bookmark.name);
+
+        //TextView used to display bookmark's url
+        TextView urlTextView = convertView.findViewById(R.id.url);
+        //set the font
+        urlTextView.setTextAppearance(getContext(), MainActivity.font);
+
+        //display the bookmark's url
+        urlTextView.setText(bookmark.url);
 
         return convertView;
     }

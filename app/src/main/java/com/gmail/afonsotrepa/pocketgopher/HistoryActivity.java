@@ -34,7 +34,7 @@ public class HistoryActivity extends AppCompatActivity
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                R.layout.activity_listview,
+                R.layout.activity_history_listview,
                 history
         );
         ListView listView = findViewById(R.id.listView);
@@ -77,7 +77,6 @@ public class HistoryActivity extends AppCompatActivity
                 History.clear(this);
 
                 return true;
-
 
             default:
                 return super.onOptionsItemSelected(item);
