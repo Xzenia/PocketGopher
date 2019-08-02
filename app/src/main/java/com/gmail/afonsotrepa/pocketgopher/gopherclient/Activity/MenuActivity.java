@@ -201,7 +201,6 @@ public class MenuActivity extends AppCompatActivity
                         }
                 );
 
-
                 alertDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener()
                         {

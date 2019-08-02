@@ -65,13 +65,10 @@ public class Bookmark
      * @deprecated
      */
     public Bookmark(Context context, String name, Character type, String selector, String server,
-                    Integer port
-    )
-            throws Exception
+                    Integer port)
     {
-        this(context, name, server + ":" + String.valueOf(port) + "/" + type.toString() + selector);
+        this(context, name, server + ":" + port + "/" + type.toString() + selector);
     }
-
 
     /**
      * Add a bookmark to the file
@@ -96,7 +93,6 @@ public class Bookmark
             throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Read the bookmarks from the bookmarks file
@@ -138,7 +134,7 @@ public class Bookmark
         }
     }
 
-    public void remove(Context context)
+    private void remove(Context context)
     {
         try
         {
@@ -149,7 +145,7 @@ public class Bookmark
 
             for (Bookmark b : bookmarks)
             {
-                if (b.id != this.id)
+                if (!b.id.equals(this.id))
                 {
                     b.add(context);
                 }
@@ -162,13 +158,94 @@ public class Bookmark
         }
     }
 
-
-    public void editBookmark(final Context context)
+    //returns the add dialog screen
+    private AlertDialog.Builder loadAddDialog(final Context context)
     {
-        //AlertDialog to be shown when method gets called
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle("Edit Bookmark");
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setTitle("Add a new Bookmark");
 
+        //setup the layout
+        LinearLayout layout = new LinearLayout(context);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        layout.setLayoutParams(layoutParams);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        layout.setLayoutParams(layoutParams);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        //setup the EditText's and add them to the layout
+        final EditText newName = new EditText(context);
+        final EditText newUrl = new EditText(context);
+        newName.setHint("Name");
+        newUrl.setHint("Url");
+
+        newName.setTextAppearance(context, MainActivity.font);
+        newUrl.setTextAppearance(context, MainActivity.font);
+
+        layout.addView(newName);
+        layout.addView(newUrl);
+        //set layout padding
+        layout.setPadding(20,10,20,10);
+
+        //apply the layout
+        dialog.setView(layout);
+
+        final Bookmark bookmark = this;
+
+        dialog.setPositiveButton("Save",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which)
+                    {
+                        if (newUrl.getText().toString().trim().length() <= 0)
+                        {
+                            Toast.makeText(context, "URL field must not be empty!", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        else
+                        {
+                            bookmark.name = newName.getText().toString();
+                            bookmark.url = newUrl.getText().toString();
+
+                            bookmark.add(context);
+
+                            Toast.makeText(context, "Bookmark saved", Toast.LENGTH_SHORT)
+                                    .show();
+                            dialog.cancel();
+                        }
+
+                        //refresh MainActivity (when called by it)
+                        if (context.getClass() == MainActivity.class)
+                        {
+                            ((Activity) context).recreate();
+                        }
+                    }
+                }
+        );
+
+        dialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                }
+        );
+
+        return dialog;
+    }
+    //returns the edit dialog screen.
+    private AlertDialog.Builder loadEditDialog(final Context context)
+    {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+
+        dialog.setTitle("Edit Bookmark");
 
         //setup the layout
         LinearLayout layout = new LinearLayout(context);
@@ -184,12 +261,18 @@ public class Bookmark
         final EditText editUrl = new EditText(context);
         editName.setHint("Name");
         editUrl.setHint("Url");
+
         editName.setText(this.name);
         editUrl.setText(this.url);
+
         editName.setTextAppearance(context, MainActivity.font);
         editUrl.setTextAppearance(context, MainActivity.font);
+
         layout.addView(editName);
         layout.addView(editUrl);
+
+        //set layout padding.
+        layout.setPadding(20,10,20,10);
 
         //apply the layout
         dialog.setView(layout);
@@ -202,23 +285,21 @@ public class Bookmark
                     @Override
                     public void onClick(final DialogInterface dialog, int which)
                     {
-                        try
+                        if (editUrl.getText().toString().trim().length() <= 0)
+                        {
+                            Toast.makeText(context, "URL field must not be empty!", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        else
                         {
                             bookmark.name = editName.getText().toString();
                             bookmark.url = editUrl.getText().toString();
 
                             bookmark.add(context);
-
                             Toast.makeText(context, "Bookmark saved", Toast.LENGTH_SHORT)
                                     .show();
-                            dialog.cancel();
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
-                                    .show();
-                            dialog.cancel();
+
+                            dialog.dismiss();
                         }
 
                         //refresh MainActivity (when called by it)
@@ -259,15 +340,34 @@ public class Bookmark
                 }
         );
 
+        return dialog;
+    }
+
+
+    private void addBookmark(final Context context)
+    {
+        //AlertDialog to be shown when method gets called
+        AlertDialog.Builder dialog;
+
+        dialog = loadAddDialog(context);
 
         dialog.show();
     }
 
+    public void editBookmark(final Context context)
+    {
+        //AlertDialog to be shown when method gets called
+        AlertDialog.Builder dialog;
 
-    static public Bookmark makeBookmark(Context context)
+        dialog = loadEditDialog(context);
+
+        dialog.show();
+    }
+
+    public static Bookmark makeNewBookmark(Context context)
     {
         Bookmark bookmark = new Bookmark(context, "", "");
-        bookmark.editBookmark(context);
+        bookmark.addBookmark(context);
         return bookmark;
     }
 

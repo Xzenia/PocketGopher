@@ -11,9 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 //make the new bookmark
-                Bookmark.makeBookmark(MainActivity.this);
+                Bookmark.makeNewBookmark(MainActivity.this);
             }
         });
 
@@ -217,18 +215,32 @@ public class MainActivity extends AppCompatActivity
             case R.id.link:
                 //create the dialog to be shown when the button gets clicked
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setMessage("URL:");
+                alertDialog.setMessage("Enter Gopher URL");
 
-                //setup the EditText where the user will input url to the page
-                final EditText input = new EditText(this);
+                LinearLayout layout = new LinearLayout(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                input.setLayoutParams(layoutParams);
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-                alertDialog.setView(input);
+                layout.setLayoutParams(layoutParams);
 
+                layout.setLayoutParams(layoutParams);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                //set layout padding.
+                layout.setPadding(20,10,20,10);
+
+                //setup the EditText where the user will input url to the page
+                final EditText input = new EditText(this);
+
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                input.setHint("URL");
+
+                input.setTextAppearance(this, MainActivity.font);
+                //add EditText to layout
+                layout.addView(input);
+
+                alertDialog.setView(layout);
 
                 alertDialog.setPositiveButton("Go",
                         new DialogInterface.OnClickListener()
