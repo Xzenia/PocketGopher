@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity
                                 }
                                 else
                                 {
-                                    showToast(getApplicationContext(), "URL field is empty!");
+                                    showToast(getApplicationContext(), "URL field must not be empty!");
                                 }
                             }
                         }
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showToast(Context context, String message)
     {
-        Toast.makeText(context, "URL field must not be empty!", Toast.LENGTH_SHORT)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT)
                 .show();
     }
 }

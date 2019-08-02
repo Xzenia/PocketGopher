@@ -173,19 +173,32 @@ public class MenuActivity extends AppCompatActivity
             case R.id.link:
                 //create the dialog to be shown when the button gets clicked
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setMessage("URL:");
+                alertDialog.setMessage("Enter Gopher URL");
 
-                //setup the EditText where the user will input url to the page
-                final EditText input = new EditText(this);
+                LinearLayout layout = new LinearLayout(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                input.setLayoutParams(layoutParams);
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-                input.setText(url);
-                alertDialog.setView(input);
+                layout.setLayoutParams(layoutParams);
 
+                layout.setLayoutParams(layoutParams);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                //set layout padding.
+                layout.setPadding(20,10,20,10);
+
+                //setup the EditText where the user will input url to the page
+                final EditText input = new EditText(this);
+
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                input.setHint("URL");
+
+                input.setTextAppearance(this, MainActivity.font);
+                //add EditText to layout
+                layout.addView(input);
+
+                alertDialog.setView(layout);
 
                 alertDialog.setPositiveButton("Go",
                         new DialogInterface.OnClickListener()
@@ -194,24 +207,18 @@ public class MenuActivity extends AppCompatActivity
                             public void onClick(final DialogInterface dialog, int which)
                             {
                                 //setup the page
-                                Page page = Page.makePage(input.getText().toString());
-
-                                page.open(MenuActivity.this);
+                                if (input.getText().toString().trim().length() > 0)
+                                {
+                                    Page page = Page.makePage(input.getText().toString());
+                                    page.open(MenuActivity.this);
+                                }
+                                else
+                                {
+                                    showToast(getApplicationContext(), "URL field must not be empty");
+                                }
                             }
                         }
                 );
-
-                alertDialog.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                dialog.cancel();
-                            }
-                        }
-                );
-
                 alertDialog.show();
 
                 return true;
@@ -224,5 +231,11 @@ public class MenuActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showToast(Context context, String message)
+    {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                .show();
     }
 }
