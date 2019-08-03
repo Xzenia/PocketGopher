@@ -194,6 +194,8 @@ public class MenuActivity extends AppCompatActivity
                 input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
                 input.setHint("URL");
 
+                input.setText(url);
+
                 input.setTextAppearance(this, MainActivity.font);
                 //add EditText to layout
                 layout.addView(input);

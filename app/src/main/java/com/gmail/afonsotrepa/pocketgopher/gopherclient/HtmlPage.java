@@ -100,9 +100,7 @@ public class HtmlPage extends Page
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //needed for API 19
                 intent.setData(Uri.parse(url));
                 context.startActivity(intent);
-
             }
-
             else
             {
                 ///TODO: needs more testing
@@ -144,6 +142,7 @@ public class HtmlPage extends Page
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);
                         intent.setData(Uri.fromFile(file));
                         context.startActivity(intent);
+
                     }
                 }).start();
             }
