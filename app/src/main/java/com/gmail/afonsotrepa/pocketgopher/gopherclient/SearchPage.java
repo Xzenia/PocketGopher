@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.History;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
@@ -87,16 +88,17 @@ public class SearchPage extends Page
 
         //AlertDialog to be shown when method gets called
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setTitle("Input search query");
+
+        LinearLayout layout = Extensions.generateDialogBoxLayout(context);
 
         //the EditText where the user will input the name of the file
         final EditText input = new EditText(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        input.setLayoutParams(layoutParams);
         input.setTextAppearance(context, MainActivity.font);
-        dialog.setView(input);
+
+        layout.addView(input);
+
+        dialog.setView(layout);
 
         dialog.setPositiveButton("Send",
                 new DialogInterface.OnClickListener()

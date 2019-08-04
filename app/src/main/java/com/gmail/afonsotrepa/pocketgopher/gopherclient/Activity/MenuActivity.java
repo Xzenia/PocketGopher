@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Bookmark;
+import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
@@ -175,18 +176,7 @@ public class MenuActivity extends AppCompatActivity
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
                 alertDialog.setMessage("Enter Gopher URL");
 
-                LinearLayout layout = new LinearLayout(this);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT
-                );
-                layout.setLayoutParams(layoutParams);
-
-                layout.setLayoutParams(layoutParams);
-                layout.setOrientation(LinearLayout.VERTICAL);
-
-                //set layout padding.
-                layout.setPadding(20,10,20,10);
+                LinearLayout layout = Extensions.generateDialogBoxLayout(this);
 
                 //setup the EditText where the user will input url to the page
                 final EditText input = new EditText(this);
@@ -216,7 +206,7 @@ public class MenuActivity extends AppCompatActivity
                                 }
                                 else
                                 {
-                                    showToast(getApplicationContext(), "URL field must not be empty");
+                                    Extensions.showToast(getApplicationContext(), "URL field must not be empty");
                                 }
                             }
                         }
@@ -233,11 +223,5 @@ public class MenuActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showToast(Context context, String message)
-    {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                .show();
     }
 }

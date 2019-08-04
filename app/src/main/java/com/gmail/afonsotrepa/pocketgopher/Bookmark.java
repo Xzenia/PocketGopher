@@ -248,17 +248,12 @@ public class Bookmark
         dialog.setTitle("Edit Bookmark");
 
         //setup the layout
-        LinearLayout layout = new LinearLayout(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        layout.setLayoutParams(layoutParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout layout = Extensions.generateDialogBoxLayout(context);
 
         //setup the EditText's and add them to the layout
         final EditText editName = new EditText(context);
         final EditText editUrl = new EditText(context);
+
         editName.setHint("Name");
         editUrl.setHint("Url");
 
@@ -270,9 +265,6 @@ public class Bookmark
 
         layout.addView(editName);
         layout.addView(editUrl);
-
-        //set layout padding.
-        layout.setPadding(20,10,20,10);
 
         //apply the layout
         dialog.setView(layout);

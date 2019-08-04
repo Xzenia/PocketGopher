@@ -12,14 +12,17 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 
 import java.io.File;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -34,7 +37,7 @@ public abstract class Page implements Serializable
     public String selector;
     public String url;
 
-    public String line = null; //optional
+    public String line; //optional
 
     public Page(String server, Integer port, Character type, String selector, String line)
     {
@@ -43,7 +46,7 @@ public abstract class Page implements Serializable
         this.selector = selector;
 
         this.url = server +
-                ((port == 70) ? "" : ":" + String.valueOf(port)) +
+                ((port == 70) ? "" : ":" + port) +
                 ((selector.matches("")) ? "" : "/" + type.toString() + selector);
 
         this.line = line;
@@ -59,8 +62,6 @@ public abstract class Page implements Serializable
     public abstract void open(final Context context);
 
     public abstract void render(final TextView textView, Context context, String line);
-
-
     /**
      * Opens an interface for the user to download the page
      *
@@ -80,20 +81,20 @@ public abstract class Page implements Serializable
 
         //AlertDialog to be shown when method gets called
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("Save as:");
+        alertDialog.setTitle("Save file as");
+
+        LinearLayout layout = Extensions.generateDialogBoxLayout(context);
 
         //the EditText where the user will input the name of the file
         final EditText input = new EditText(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        input.setLayoutParams(layoutParams);
         input.setText(selector.substring(selector.lastIndexOf("/") + 1)); //default file name
         input.setTextAppearance(context, MainActivity.font);
-        alertDialog.setView(input);
-        final String fileName = input.getText().toString();
 
+        layout.addView(input);
+
+        alertDialog.setView(layout);
+
+        final String fileName = input.getText().toString();
 
         alertDialog.setPositiveButton("Save",
                 new DialogInterface.OnClickListener()
@@ -117,10 +118,10 @@ public abstract class Page implements Serializable
 
                                 try
                                 {
-                                    Integer n = 0;
+                                    int counter = 0;
                                     while (file.exists())
                                     {
-                                        n += 1;
+                                        counter += 1;
 
                                         if (fileName.matches("(.*).(.*)"))
                                         {
@@ -131,7 +132,7 @@ public abstract class Page implements Serializable
                                                             "/" + fileName.substring(0, fileName
                                                             .indexOf
                                                                     ('.')) +
-                                                            "(" + String.valueOf(n) + ")" +
+                                                            "(" + counter + ")" +
                                                             fileName.substring(fileName.indexOf(
                                                                     '.'))
                                             );
@@ -143,18 +144,28 @@ public abstract class Page implements Serializable
                                                             (Environment
                                                                     .DIRECTORY_DOWNLOADS) +
                                                             fileName +
-                                                            "(" + String.valueOf(n) + ")"
+                                                            "(" + counter + ")"
                                             );
                                         }
                                     }
 
-                                    final File f = file;
-                                    f.createNewFile();
+                                    final File finalFile = file; //TODO: Find a better name for this.
+                                    boolean isFileCreated = finalFile.createNewFile();
 
                                     try
                                     {
                                         Connection conn = new Connection(server, port);
-                                        conn.getBinary(selector, f);
+                                        if (isFileCreated)
+                                        {
+                                            conn.getBinary(selector, finalFile);
+                                        }
+                                        else
+                                        {
+                                            Extensions.showToast(context,
+                                                    "File was not created! Please try again.");
+                                            Log.e("Page", "isFileCreated returned false!");
+                                            dialog.cancel();
+                                        }
                                     }
                                     catch (final IOException e)
                                     {
@@ -178,7 +189,7 @@ public abstract class Page implements Serializable
                                         public void run()
                                         {
                                             Toast.makeText(context,
-                                                    "File saved saved as: " + f.getName(),
+                                                    "File saved as: " + finalFile.getName(),
                                                     Toast.LENGTH_SHORT
                                             ).show();
                                         }
@@ -219,11 +230,9 @@ public abstract class Page implements Serializable
         alertDialog.show();
     }
 
-
     @NonNull
     public static Page makePage(Character type, String selector, String server, Integer port,
-                                String line
-    )
+                                String line)
     {
         switch (type)
         {
@@ -273,7 +282,7 @@ public abstract class Page implements Serializable
 
             case '4': //macintosh binhex file
             case '5': //binary archive
-            case '6': //uuencoded file
+            case '6': //unencoded file
             case '9': //binary file
             case 'd': //word-processing document
                 return new BinPage(
@@ -309,13 +318,6 @@ public abstract class Page implements Serializable
         }
     }
 
-    @NonNull
-    public static Page makePage(Character type, String selector, String server, Integer port)
-    {
-        return makePage(type, selector, server, port, null);
-    }
-
-
     public static Page makePage(String url, String line)
     {
         //remove "gopher://" from the beginning of the url if it's present there
@@ -328,9 +330,9 @@ public abstract class Page implements Serializable
         String path;
 
         String server;
-        Integer port;
+        int port;
         String selector;
-        Character type;
+        char type;
 
         //get the host and the path
         if (url.matches("(.*)/(.*)") || url.matches("(.*)/1"))

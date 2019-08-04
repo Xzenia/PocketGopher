@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Bookmark;
+import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
@@ -33,7 +34,7 @@ import java.io.IOException;
 
 public class TextFileActivity extends AppCompatActivity
 {
-    Page p;
+    Page page;
     String selector;
     String server;
     Integer port;
@@ -43,7 +44,7 @@ public class TextFileActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu); //same layout as MenuAcitivity
+        setContentView(R.layout.activity_menu); //same layout as MenuActivity
 
         //widget to write to
         final TextView textView = (TextView) findViewById(R.id.textView);
@@ -60,11 +61,11 @@ public class TextFileActivity extends AppCompatActivity
 
                 //intent stuff
                 Intent i = getIntent();
-                p = (Page) i.getSerializableExtra("page");
-                selector = p.selector;
-                server = p.server;
-                port = p.port;
-                url = p.url;
+                page = (Page) i.getSerializableExtra("page");
+                selector = page.selector;
+                server = page.server;
+                port = page.port;
+                url = page.url;
 
                 handler.post(new Runnable()
                 {
@@ -170,26 +171,30 @@ public class TextFileActivity extends AppCompatActivity
                 return true;
 
             case R.id.downloadButton:
-                p.download(this);
+                page.download(this);
 
                 return true;
 
             case R.id.link:
                 //create the dialog to be shown when the button gets clicked
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setMessage("URL:");
+                alertDialog.setMessage("Enter Gopher URL");
+
+                LinearLayout layout = Extensions.generateDialogBoxLayout(this);
 
                 //setup the EditText where the user will input url to the page
                 final EditText input = new EditText(this);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT
-                );
-                input.setLayoutParams(layoutParams);
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-                input.setText(url);
-                alertDialog.setView(input);
 
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                input.setHint("URL");
+
+                input.setText(url);
+
+                input.setTextAppearance(this, MainActivity.font);
+                //add EditText to layout
+                layout.addView(input);
+
+                alertDialog.setView(layout);
 
                 alertDialog.setPositiveButton("Go",
                         new DialogInterface.OnClickListener()
@@ -198,13 +203,19 @@ public class TextFileActivity extends AppCompatActivity
                             public void onClick(final DialogInterface dialog, int which)
                             {
                                 //setup the page
-                                Page page = Page.makePage(input.getText().toString());
-
-                                page.open(TextFileActivity.this);
+                                if (input.getText().toString().trim().length() > 0)
+                                {
+                                    //setup the page
+                                    Page page = Page.makePage(input.getText().toString());
+                                    page.open(TextFileActivity.this);
+                                }
+                                else
+                                {
+                                    Extensions.showToast(getApplicationContext(), "URL field must not be empty");
+                                }
                             }
                         }
                 );
-
 
                 alertDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener()
@@ -220,7 +231,6 @@ public class TextFileActivity extends AppCompatActivity
                 alertDialog.show();
 
                 return true;
-
 
             default:
                 return super.onOptionsItemSelected(item);
