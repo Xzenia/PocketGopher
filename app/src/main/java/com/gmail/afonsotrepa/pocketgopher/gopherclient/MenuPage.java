@@ -35,7 +35,6 @@ public class MenuPage extends Page
         this(selector, server, port, null);
     }
 
-
     public void render(final TextView textView, final Context context, String line)
     {
         //handler to the main thread
@@ -62,7 +61,6 @@ public class MenuPage extends Page
             }
         };
 
-
         //apply the span to text and append text to textView
         handler.post(new Runnable()
         {
@@ -79,7 +77,6 @@ public class MenuPage extends Page
             }
         });
     }
-
 
     public void open(Context context)
     {

@@ -42,7 +42,6 @@ public class MenuActivity extends AppCompatActivity
     Integer port;
     String url;
 
-
     @Override
     protected void onCreate(Bundle savedInstaceState)
     {
@@ -52,8 +51,6 @@ public class MenuActivity extends AppCompatActivity
         final TextView textView = findViewById(R.id.textView);
         textView.setTextAppearance(this, MainActivity.font);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-        final Context context = this;
 
         //start a new thread to do network stuff
         new Thread(new Runnable()
@@ -66,11 +63,11 @@ public class MenuActivity extends AppCompatActivity
 
                 //get info
                 Intent i = getIntent();
-                final Page p = (Page) i.getSerializableExtra("page");
-                selector = p.selector;
-                server = p.server;
-                port = p.port;
-                url = p.url;
+                final Page page = (Page) i.getSerializableExtra("page");
+                selector = page.selector;
+                server = page.server;
+                port = page.port;
+                url = page.url;
 
                 handler.post(new Runnable()
                 {
@@ -161,8 +158,7 @@ public class MenuActivity extends AppCompatActivity
             case R.id.addBookmarkButton:
                 try
                 {
-                    new Bookmark(getApplicationContext(), "", '1', selector, server, port)
-                            .editBookmark(MenuActivity.this);
+                    Bookmark.makeNewBookmark(this, url);
                 }
                 catch (Exception e)
                 {

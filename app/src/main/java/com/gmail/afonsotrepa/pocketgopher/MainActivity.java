@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,12 +91,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 //make the new bookmark
-                Bookmark.makeNewBookmark(MainActivity.this);
+                Bookmark.makeNewBookmark(MainActivity.this, "");
             }
         });
 
 
-        List<Bookmark> bookmarks = Bookmark.read(MainActivity.this);
+        ArrayList<Bookmark> bookmarks = Bookmark.read(MainActivity.this);
 
         if (bookmarks == null)
         {
@@ -145,12 +146,16 @@ public class MainActivity extends AppCompatActivity
 
         //make the items "long clickable" (edit the bookmark when long clicked)
         listView.setLongClickable(true);
+
+        final Bookmark[] finalBookmarksArray = bookmarksArray;
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
             {
-                ((Bookmark) parent.getItemAtPosition(position)).editBookmark(MainActivity.this);
+                Bookmark selectedBookmark = (Bookmark) parent.getItemAtPosition(position);
+                Bookmark.editBookmark(MainActivity.this, selectedBookmark, finalBookmarksArray);
 
                 return true;
             }

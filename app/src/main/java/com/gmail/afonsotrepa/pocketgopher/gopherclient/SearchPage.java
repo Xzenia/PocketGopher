@@ -33,12 +33,6 @@ public class SearchPage extends Page
         super(server, port, '7', selector, line);
     }
 
-    public SearchPage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
-    }
-
-
     public void render(final TextView textView, final Context context, String line)
     {
         final Handler handler = new Handler(Looper.getMainLooper());

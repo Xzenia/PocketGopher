@@ -47,7 +47,7 @@ public class TextFileActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu); //same layout as MenuActivity
 
         //widget to write to
-        final TextView textView = (TextView) findViewById(R.id.textView);
+        final TextView textView = findViewById(R.id.textView);
         //set the font
         textView.setTextAppearance(this, MainActivity.font);
 
@@ -85,7 +85,6 @@ public class TextFileActivity extends AppCompatActivity
 
                     //get the desired text file
                     lines = conn.getText(selector);
-
 
                     //make the progress bar invisible
                     final ProgressBar progressBar = findViewById(R.id.progressBar);
@@ -160,8 +159,7 @@ public class TextFileActivity extends AppCompatActivity
             case R.id.addBookmarkButton:
                 try
                 {
-                    new Bookmark(getApplicationContext(), "", '0', selector, server, port)
-                            .editBookmark(TextFileActivity.this);
+                    Bookmark.makeNewBookmark(this, url);
                 }
                 catch (Exception e)
                 {

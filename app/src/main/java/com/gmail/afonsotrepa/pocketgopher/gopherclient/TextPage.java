@@ -44,7 +44,6 @@ public class TextPage extends Page
             }
         }
 
-
         final Handler handler = new Handler(Looper.getMainLooper());
 
         //display the line
@@ -57,7 +56,6 @@ public class TextPage extends Page
             }
         });
     }
-
 
     public void open(Context context)
     {

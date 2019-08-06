@@ -78,8 +78,7 @@ public class Bookmark
         try
         {
             FileOutputStream outputStream = context.openFileOutput(BOOKMARKS_FILE,
-                    Context.MODE_APPEND
-            );
+                    Context.MODE_APPEND);
 
             outputStream.write((
                     this.name + "\t" +
@@ -94,12 +93,36 @@ public class Bookmark
         }
     }
 
+    void edit(Context context, Bookmark[] bookmarks)
+    {
+        try
+        {
+            FileOutputStream outputStream = context.openFileOutput(BOOKMARKS_FILE,
+                    Context.MODE_PRIVATE);
+
+            for (Bookmark bookmark : bookmarks)
+            {
+                outputStream.write((
+                        bookmark.name + "\t" +
+                                bookmark.url + "\t" +
+                                bookmark.id.toString() + "\n"
+                ).getBytes());
+            }
+
+            outputStream.close();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Read the bookmarks from the bookmarks file
      *
      * @return a list of all the bookmarks in the bookmarks file
      */
-    static List<Bookmark> read(Context context)
+    static ArrayList<Bookmark> read(Context context)
     {
         try
         {
@@ -107,7 +130,7 @@ public class Bookmark
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
 
             //read the bookmark(s) from the file
-            List<Bookmark> bookmarks = new ArrayList<>();
+            ArrayList<Bookmark> bookmarks = new ArrayList<>();
             String b;
             while ((b = bufferedreader.readLine()) != null)
             {
@@ -159,22 +182,13 @@ public class Bookmark
     }
 
     //returns the add dialog screen
-    private AlertDialog.Builder loadAddDialog(final Context context)
+    private AlertDialog.Builder loadAddDialog(final Context context, String url)
     {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("Add a new Bookmark");
 
         //setup the layout
-        LinearLayout layout = new LinearLayout(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        layout.setLayoutParams(layoutParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        layout.setLayoutParams(layoutParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout layout = Extensions.generateDialogBoxLayout(context);
 
         //setup the EditText's and add them to the layout
         final EditText newName = new EditText(context);
@@ -187,11 +201,14 @@ public class Bookmark
 
         layout.addView(newName);
         layout.addView(newUrl);
-        //set layout padding
-        layout.setPadding(20,10,20,10);
 
         //apply the layout
         dialog.setView(layout);
+
+        if (!url.trim().isEmpty())
+        {
+            newUrl.setText(url);
+        }
 
         final Bookmark bookmark = this;
 
@@ -241,7 +258,7 @@ public class Bookmark
         return dialog;
     }
     //returns the edit dialog screen.
-    private AlertDialog.Builder loadEditDialog(final Context context)
+    private AlertDialog.Builder loadEditDialog(final Context context, final Bookmark[] bookmarks)
     {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 
@@ -287,7 +304,9 @@ public class Bookmark
                             bookmark.name = editName.getText().toString();
                             bookmark.url = editUrl.getText().toString();
 
-                            bookmark.add(context);
+                            bookmarks[bookmark.id] = bookmark;
+
+                            bookmark.edit(context, bookmarks);
                             Toast.makeText(context, "Bookmark saved", Toast.LENGTH_SHORT)
                                     .show();
 
@@ -335,31 +354,24 @@ public class Bookmark
         return dialog;
     }
 
-
-    private void addBookmark(final Context context)
+    public static Bookmark makeNewBookmark(Context context, String url)
     {
-        //AlertDialog to be shown when method gets called
         AlertDialog.Builder dialog;
-
-        dialog = loadAddDialog(context);
-
-        dialog.show();
-    }
-
-    public void editBookmark(final Context context)
-    {
-        //AlertDialog to be shown when method gets called
-        AlertDialog.Builder dialog;
-
-        dialog = loadEditDialog(context);
-
-        dialog.show();
-    }
-
-    public static Bookmark makeNewBookmark(Context context)
-    {
+        //Make a new bookmark instance.
         Bookmark bookmark = new Bookmark(context, "", "");
-        bookmark.addBookmark(context);
+        //Load the dialog box and show it.
+        dialog = bookmark.loadAddDialog(context, url);
+        dialog.show();
+
+        return bookmark;
+    }
+
+    public static Bookmark editBookmark(final Context context, Bookmark bookmark, Bookmark[] bookmarks)
+    {
+        AlertDialog.Builder dialog;
+        dialog = bookmark.loadEditDialog(context, bookmarks);
+        dialog.show();
+
         return bookmark;
     }
 

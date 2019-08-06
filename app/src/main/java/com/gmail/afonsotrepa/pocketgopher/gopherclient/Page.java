@@ -118,7 +118,7 @@ public abstract class Page implements Serializable
 
                                 try
                                 {
-                                    int counter = 0;
+                                    Integer counter = 0;
                                     while (file.exists())
                                     {
                                         counter += 1;
@@ -130,8 +130,7 @@ public abstract class Page implements Serializable
                                                             (Environment
                                                                     .DIRECTORY_DOWNLOADS) +
                                                             "/" + fileName.substring(0, fileName
-                                                            .indexOf
-                                                                    ('.')) +
+                                                            .indexOf('.')) +
                                                             "(" + counter + ")" +
                                                             fileName.substring(fileName.indexOf(
                                                                     '.'))
@@ -141,31 +140,19 @@ public abstract class Page implements Serializable
                                         {
                                             file = new File(
                                                     Environment.getExternalStoragePublicDirectory
-                                                            (Environment
-                                                                    .DIRECTORY_DOWNLOADS) +
-                                                            fileName +
-                                                            "(" + counter + ")"
+                                                            (Environment.DIRECTORY_DOWNLOADS)
+                                                            + fileName
                                             );
                                         }
                                     }
 
                                     final File finalFile = file; //TODO: Find a better name for this.
-                                    boolean isFileCreated = finalFile.createNewFile();
+                                    finalFile.createNewFile();
 
                                     try
                                     {
                                         Connection conn = new Connection(server, port);
-                                        if (isFileCreated)
-                                        {
-                                            conn.getBinary(selector, finalFile);
-                                        }
-                                        else
-                                        {
-                                            Extensions.showToast(context,
-                                                    "File was not created! Please try again.");
-                                            Log.e("Page", "isFileCreated returned false!");
-                                            dialog.cancel();
-                                        }
+                                        conn.getBinary(selector, finalFile);
                                     }
                                     catch (final IOException e)
                                     {
@@ -195,9 +182,7 @@ public abstract class Page implements Serializable
                                         }
                                     });
                                 }
-                                catch (
-                                        final IOException e)
-
+                                catch (final IOException e)
                                 {
                                     handler.post(new Runnable()
                                     {
@@ -330,9 +315,9 @@ public abstract class Page implements Serializable
         String path;
 
         String server;
-        int port;
+        Integer port;
         String selector;
-        char type;
+        Character type;
 
         //get the host and the path
         if (url.matches("(.*)/(.*)") || url.matches("(.*)/1"))
