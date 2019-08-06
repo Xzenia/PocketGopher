@@ -304,8 +304,6 @@ public class Bookmark
                             bookmark.name = editName.getText().toString();
                             bookmark.url = editUrl.getText().toString();
 
-                            bookmarks[bookmark.id] = bookmark;
-
                             bookmark.edit(context, bookmarks);
                             Toast.makeText(context, "Bookmark saved", Toast.LENGTH_SHORT)
                                     .show();
