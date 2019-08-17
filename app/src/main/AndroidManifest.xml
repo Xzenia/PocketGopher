@@ -36,10 +36,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gopherclient$Activity.MenuActivity"
+            android:name=".gopherclient.Activity.MenuActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".gopherclient$Activity.TextFileActivity"
+            android:name=".gopherclient.Activity.TextFileActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HistoryActivity"
