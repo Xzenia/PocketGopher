@@ -17,9 +17,6 @@ import com.gmail.afonsotrepa.pocketgopher.History;
 
 public class TextPage extends Page
 {
-    private final static Float MAIN_TITLE_SIZE = 2f;
-    private final static Float SUB_TITLE_SIZE = 1.5f;
-
     //selector is needed to check for titles
     TextPage(String selector, String line)
     {
@@ -30,19 +27,6 @@ public class TextPage extends Page
     {
 
         final SpannableString text = new SpannableString(line + "\n");
-
-        //Change the font size if it's a title (UNTESTED!!!)
-        if (this.selector.equals("TITLE"))
-        {
-            if (textView.getText().toString().matches(""))
-            {
-                text.setSpan(new RelativeSizeSpan(MAIN_TITLE_SIZE), 0, text.length(), 0);
-            }
-            else
-            {
-                text.setSpan(new RelativeSizeSpan(SUB_TITLE_SIZE), 0, text.length(), 0);
-            }
-        }
 
         final Handler handler = new Handler(Looper.getMainLooper());
 
