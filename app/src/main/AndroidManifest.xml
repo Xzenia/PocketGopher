@@ -12,24 +12,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="gopher" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".gopherclient.Activity.MenuActivity"
+            android:name=".gopherclient$Activity.MenuActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".gopherclient.Activity.TextFileActivity"
+            android:name=".gopherclient$Activity.TextFileActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HistoryActivity"

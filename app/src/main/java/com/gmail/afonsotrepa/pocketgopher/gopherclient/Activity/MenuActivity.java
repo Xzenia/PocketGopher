@@ -30,11 +30,6 @@ import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 import java.io.IOException;
 import java.util.List;
 
-
-/**
- *
- */
-
 public class MenuActivity extends AppCompatActivity
 {
     String selector;
@@ -49,7 +44,13 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
 
         final TextView textView = findViewById(R.id.textView);
+
         textView.setTextAppearance(this, MainActivity.font);
+
+        textView.setLineSpacing(MainActivity.lineSpacing, 1);
+        textView.setTextSize(MainActivity.fontSize);
+
+        //Make Gopher links selectable.
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         //start a new thread to do network stuff
@@ -62,8 +63,10 @@ public class MenuActivity extends AppCompatActivity
                 final Handler handler = new Handler(Looper.getMainLooper());
 
                 //get info
-                Intent i = getIntent();
-                final Page page = (Page) i.getSerializableExtra("page");
+                Intent intent = getIntent();
+
+                final Page page = (Page) intent.getSerializableExtra("page");
+
                 selector = page.selector;
                 server = page.server;
                 port = page.port;
@@ -123,18 +126,6 @@ public class MenuActivity extends AppCompatActivity
                     public void run()
                     {
                         progressBar.setVisibility(View.GONE);
-                    }
-                });
-
-
-                //some settings for textView
-                handler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        textView.setLineSpacing(18, 1);
-                        textView.setMovementMethod(LinkMovementMethod.getInstance());
                     }
                 });
             }

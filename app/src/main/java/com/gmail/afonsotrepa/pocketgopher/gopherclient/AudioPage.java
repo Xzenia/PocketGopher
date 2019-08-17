@@ -39,7 +39,6 @@ public class AudioPage extends Page
         this(selector, server, port, null);
     }
 
-
     public void render(final TextView textView, final Context context, String line)
     {
         //handler to the main thread

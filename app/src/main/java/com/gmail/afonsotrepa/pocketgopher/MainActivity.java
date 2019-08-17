@@ -1,7 +1,6 @@
 package com.gmail.afonsotrepa.pocketgopher;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,21 +20,24 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity
 {
-    private Menu menu;
     public static int font = R.style.monospace;
+    public static int fontSize = 12;
+    public static int lineSpacing = 12;
 
+    //SharedPreferences keys
     private static final String MONOSPACE_FONT_SETTING = "monospace_font";
     private static final String FIRST_RUN = "first_run";
+    private static final String FONT_SIZE = "font_size";
+    private static final String LINE_SPACING = "line_spacing";
+
+    private Intent optionsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,17 +48,13 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        if (sharedPreferences.getInt(MONOSPACE_FONT_SETTING, 1) == 1)
-        {
-            font = R.style.monospace;
-        }
-        else
-        {
-            font = R.style.serif;
-        }
-
         if (sharedPreferences.getBoolean(FIRST_RUN, true))
         {
+            //Set initial values in the SharedPreferences.
+            editor.putBoolean(MONOSPACE_FONT_SETTING, true);
+            editor.putString(FONT_SIZE, "12");
+            editor.putString(LINE_SPACING, "12");
+
             editor.putBoolean(FIRST_RUN, false);
             editor.apply();
 
@@ -64,6 +63,15 @@ public class MainActivity extends AppCompatActivity
             new Bookmark(this, "SDF", "sdf.org").add(this);
             new Bookmark(this, "Khzae", "khzae.net").add(this);
             new Bookmark(this, "Cosmic Voyage", "cosmic.voyage:70/1").add(this);
+        }
+
+        if (sharedPreferences.getBoolean(MONOSPACE_FONT_SETTING, true))
+        {
+            font = R.style.monospace;
+        }
+        else
+        {
+            font = R.style.serif;
         }
 
         Intent intent = getIntent();
@@ -75,6 +83,26 @@ public class MainActivity extends AppCompatActivity
                 page.open(this);
             }
         }
+
+        try
+        {
+            fontSize = Integer.parseInt(sharedPreferences.getString(FONT_SIZE, "12"));
+            lineSpacing = Integer.parseInt(sharedPreferences.getString(LINE_SPACING, "12"));
+        }
+        catch (Exception ex)
+        {
+            //Triggers when input either fontSize or lineSpacing is not an integer.
+            Log.e("MainActivity", ex.toString());
+
+            editor.putString(FONT_SIZE, "12");
+            editor.putString(LINE_SPACING, "12");
+            editor.apply();
+
+            fontSize = Integer.parseInt(sharedPreferences.getString(FONT_SIZE, "12"));
+            lineSpacing = Integer.parseInt(sharedPreferences.getString(LINE_SPACING, "12"));
+        }
+
+        optionsIntent = new Intent(this, SettingsActivity.class);
     }
 
     @Override
@@ -169,54 +197,16 @@ public class MainActivity extends AppCompatActivity
     {
         getMenuInflater().inflate(R.menu.client_main, menu);
 
-        this.menu = menu;
-        menu.findItem(R.id.monospace_font).setChecked(true);
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (sharedPreferences.getInt(MONOSPACE_FONT_SETTING, 1) == 1)
-        {
-            menu.findItem(R.id.monospace_font).setChecked(true);
-        }
-        else
-        {
-            menu.findItem(R.id.monospace_font).setChecked(false);
-        }
-
-        editor.apply();
-
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
         switch (item.getItemId())
         {
-            case R.id.monospace_font:
-
-                if (font == R.style.serif)
-                {
-                    font = R.style.monospace;
-                    menu.findItem(R.id.monospace_font).setChecked(true);
-                    editor.putInt(MONOSPACE_FONT_SETTING, 1);
-                }
-                else
-                {
-                    font = R.style.serif;
-                    menu.findItem(R.id.monospace_font).setChecked(false);
-                    editor.putInt(MONOSPACE_FONT_SETTING, 0);
-                }
-                editor.apply();
-
-                //restart the activity
-                this.recreate();
-
+            case R.id.options_menu:
+                startActivity(optionsIntent);
                 return true;
 
             case R.id.link:

@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <item
+        android:id="@+id/refresh"
+        android:enabled="true"
+        android:icon="@drawable/ic_refresh_white"
+        android:title="Refresh"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/addBookmarkButton"
         android:enabled="true"
@@ -13,14 +22,8 @@
         android:id="@+id/link"
         android:enabled="true"
         android:icon="@drawable/ic_link_white"
-        android:title="Link"
+        android:title="Edit Link"
         android:visible="true"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/refresh"
-        android:enabled="true"
-        android:icon="@drawable/ic_refresh_white"
-        android:title="Refresh"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
+
 </menu>

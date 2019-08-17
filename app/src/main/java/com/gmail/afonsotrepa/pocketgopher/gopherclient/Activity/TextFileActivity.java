@@ -51,6 +51,12 @@ public class TextFileActivity extends AppCompatActivity
         //set the font
         textView.setTextAppearance(this, MainActivity.font);
 
+        textView.setLineSpacing(MainActivity.lineSpacing, 1);
+        textView.setTextSize(MainActivity.fontSize);
+
+        //Make Gopher links selectable.
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+
         //start a new thread to do network stuff
         new Thread(new Runnable()
         {
@@ -60,8 +66,9 @@ public class TextFileActivity extends AppCompatActivity
                 final Handler handler = new Handler(Looper.getMainLooper());
 
                 //intent stuff
-                Intent i = getIntent();
-                page = (Page) i.getSerializableExtra("page");
+                Intent intent = getIntent();
+
+                page = (Page) intent.getSerializableExtra("page");
                 selector = page.selector;
                 server = page.server;
                 port = page.port;
@@ -128,16 +135,6 @@ public class TextFileActivity extends AppCompatActivity
                     }
                 });
 
-                //some settings for textView
-                handler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        textView.setLineSpacing(18, 1);
-                        textView.setMovementMethod(LinkMovementMethod.getInstance());
-                    }
-                });
             }
         }).start();
 
