@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <CheckBoxPreference
         android:key="monospace_font"
         android:title="Monospace font"
-        android:summary="Whether or not the app will use a Monospace or a Serif font."
-        android:checked="true" />
+        android:summary="Whether or not the app will use a Monospace or a Serif font." />
 
     <EditTextPreference
         android:key="font_size"
