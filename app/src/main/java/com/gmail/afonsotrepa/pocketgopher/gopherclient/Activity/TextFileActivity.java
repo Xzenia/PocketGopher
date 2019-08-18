@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Bookmark;
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
+import com.gmail.afonsotrepa.pocketgopher.HistoryActivity;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
@@ -170,6 +171,11 @@ public class TextFileActivity extends AppCompatActivity
 
                 return true;
 
+            case R.id.refresh:
+                this.recreate();
+
+                return true;
+
             case R.id.link:
                 //create the dialog to be shown when the button gets clicked
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -224,6 +230,12 @@ public class TextFileActivity extends AppCompatActivity
                 );
 
                 alertDialog.show();
+
+                return true;
+
+            case R.id.history:
+                Intent intent = new Intent(TextFileActivity.this, HistoryActivity.class);
+                startActivity(intent);
 
                 return true;
 

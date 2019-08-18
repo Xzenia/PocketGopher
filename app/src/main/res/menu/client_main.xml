@@ -3,17 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/options_menu"
-        android:enabled="true"
-        android:title="Options"
-        android:visible="true"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/link"
         android:enabled="true"
         android:icon="@drawable/ic_link_white"
-        android:title="Link"
+        android:title="@string/link"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
@@ -21,7 +14,14 @@
         android:id="@+id/history"
         android:enabled="true"
         android:icon="@drawable/ic_history_white"
-        android:title="History"
+        android:title="@string/history"
         android:visible="true"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/options_menu"
+        android:enabled="true"
+        android:title="@string/options"
+        android:visible="true"
+        app:showAsAction="never" />
 </menu>

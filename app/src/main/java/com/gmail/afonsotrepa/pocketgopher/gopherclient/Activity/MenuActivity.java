@@ -2,7 +2,6 @@ package com.gmail.afonsotrepa.pocketgopher.gopherclient.Activity;
 
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Bookmark;
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
+import com.gmail.afonsotrepa.pocketgopher.HistoryActivity;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
@@ -198,12 +198,30 @@ public class MenuActivity extends AppCompatActivity
                             }
                         }
                 );
+
+                alertDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.cancel();
+                            }
+                        }
+                );
+
                 alertDialog.show();
 
                 return true;
 
             case R.id.refresh:
-                this.recreate();
+                MenuActivity.this.recreate();
+
+                return true;
+
+            case R.id.history:
+                Intent intent = new Intent(MenuActivity.this, HistoryActivity.class);
+                startActivity(intent);
 
                 return true;
 

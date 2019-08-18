@@ -4,4 +4,12 @@
     <string name="booksmarks_file">com.gmail.afonsotrepa.pocketgopher.BOOKMARKS_FILE_KEY</string>
     <string name="settings_file">com.gmail.afonsotrepa.pocketgopher.SETTINGS_FILE</string>
     <string name="url_field_empty">URL field is empty!</string>
+
+    <string name="edit_link">Edit Link</string>
+    <string name="history">History</string>
+    <string name="link">Link</string>
+    <string name="options">Options</string>
+    <string name="download">Download</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_bookmark">Add Bookmark</string>
 </resources>

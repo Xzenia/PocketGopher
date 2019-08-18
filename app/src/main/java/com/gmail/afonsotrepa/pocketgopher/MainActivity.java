@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity
     private static final String FONT_SIZE = "font_size";
     private static final String LINE_SPACING = "line_spacing";
 
-    private Intent optionsIntent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -101,8 +99,6 @@ public class MainActivity extends AppCompatActivity
             fontSize = Integer.parseInt(sharedPreferences.getString(FONT_SIZE, "12"));
             lineSpacing = Integer.parseInt(sharedPreferences.getString(LINE_SPACING, "12"));
         }
-
-        optionsIntent = new Intent(this, SettingsActivity.class);
     }
 
     @Override
@@ -205,10 +201,6 @@ public class MainActivity extends AppCompatActivity
     {
         switch (item.getItemId())
         {
-            case R.id.options_menu:
-                startActivity(optionsIntent);
-                return true;
-
             case R.id.link:
                 //create the dialog to be shown when the button gets clicked
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -265,6 +257,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.history:
                 Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
+
+                return true;
+
+            case R.id.options_menu:
+                Intent optionsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(optionsIntent);
 
                 return true;
 

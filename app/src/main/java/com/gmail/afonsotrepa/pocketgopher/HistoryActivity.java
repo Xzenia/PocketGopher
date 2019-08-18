@@ -24,7 +24,6 @@ public class HistoryActivity extends AppCompatActivity
         super.onResume();
         setContentView(R.layout.activity_history);
 
-
         //get the history and display it on the ListView
         List<String> history = History.read(this);
         if (history == null)
@@ -53,18 +52,20 @@ public class HistoryActivity extends AppCompatActivity
                     @Override
                     public void run()
                     {
+                        finish();
                         Page.makePage(url).open(HistoryActivity.this);
                     }
                 }).start();
             }
         });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.client_history, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -80,5 +81,11 @@ public class HistoryActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        this.finish();
+        return true;
     }
 }

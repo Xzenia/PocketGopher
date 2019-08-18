@@ -7,7 +7,7 @@
         android:id="@+id/refresh"
         android:enabled="true"
         android:icon="@drawable/ic_refresh_white"
-        android:title="Refresh"
+        android:title="@string/options"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
@@ -15,14 +15,23 @@
         android:id="@+id/addBookmarkButton"
         android:enabled="true"
         android:icon="@drawable/ic_bookmark_border_white"
-        android:title="Add Bookmark"
+        android:title="@string/add_bookmark"
         android:visible="true"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/link"
         android:enabled="true"
         android:icon="@drawable/ic_link_white"
-        android:title="Edit Link"
+        android:title="@string/edit_link"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/history"
+        android:enabled="true"
+        android:icon="@drawable/ic_history_white"
+        android:title="@string/history"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
