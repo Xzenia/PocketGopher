@@ -94,8 +94,6 @@ public abstract class Page implements Serializable
 
         alertDialog.setView(layout);
 
-        final String fileName = input.getText().toString();
-
         alertDialog.setPositiveButton("Save",
                 new DialogInterface.OnClickListener()
                 {
@@ -108,6 +106,8 @@ public abstract class Page implements Serializable
                             public void run()
                             {
                                 Handler handler = new Handler(Looper.getMainLooper());
+
+                                String fileName = input.getText().toString();
 
                                 //file is always saved in the download directory atm
                                 File file = new File(

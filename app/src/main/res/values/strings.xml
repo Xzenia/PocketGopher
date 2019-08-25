@@ -12,4 +12,15 @@
     <string name="download">Download</string>
     <string name="refresh">Refresh</string>
     <string name="add_bookmark">Add Bookmark</string>
+    <string name="monospace_font_summary">Whether or not the app will use a Monospace or a Serif font.</string>
+    <string name="monospace_font">Monospace font</string>
+    <string name="font_size">Font Size</string>
+    <string name="line_spacing_summary">Adjust the spaces between each line of text</string>
+    <string name="line_spacing">Line spacing</string>
+    <string name="restore_bookmarks_warning_message">Are you sure? Restoring bookmarks from a backup will OVERWRITE your currently saved bookmarks.</string>
+    <string name="restore_bookmarks">Restore Bookmarks</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="export_bookmarks_no_permission_message">The application does not have permission to save in </string>
+    <string name="invalid_bookmarks_message">Bookmarks file is either invalid or contains no bookmarks!</string>
 </resources>

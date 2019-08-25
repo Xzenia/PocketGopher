@@ -1,11 +1,15 @@
 package com.gmail.afonsotrepa.pocketgopher;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -13,7 +17,9 @@ import android.widget.Toast;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,6 +39,7 @@ public class Bookmark
     public Integer id; //a unique id that identifies the bookmark
 
     private static final String BOOKMARKS_FILE = "bookmarks";
+    private static final String EXPORTED_BOOKMARKS_FILE = "PocketGopher_Bookmarks";
 
     private Bookmark(String name, String url, Integer id)
     {
@@ -179,6 +186,11 @@ public class Bookmark
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public void open(Context context)
+    {
+        this.page.open(context);
     }
 
     //returns the add dialog screen
@@ -373,8 +385,98 @@ public class Bookmark
         return bookmark;
     }
 
-    public void open(Context context)
+    public static void exportBookmarks(final Context context)
     {
-        this.page.open(context);
+        ArrayList<Bookmark> bookmarkArrayList = read(context);
+
+        try
+        {
+            int writeExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (writeExternalStoragePermission == PackageManager.PERMISSION_GRANTED)
+            {
+                File backupFile = new File(Environment.getExternalStorageDirectory(), EXPORTED_BOOKMARKS_FILE);
+
+                FileOutputStream outputStream = new FileOutputStream(backupFile);
+
+                for (Bookmark bookmark : bookmarkArrayList)
+                {
+                    outputStream.write((
+                            bookmark.name + "\t" +
+                                    bookmark.url + "\t" +
+                                    bookmark.id.toString() + "\n"
+                    ).getBytes());
+                }
+
+                outputStream.close();
+
+                Extensions.showToast(context, "Backup saved as " + Environment.getExternalStorageDirectory() + "/" + EXPORTED_BOOKMARKS_FILE);
+            }
+            else
+            {
+                Extensions.showToast(context, context.getString(R.string.export_bookmarks_no_permission_message)
+                + Environment.getExternalStorageDirectory());
+            }
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void importBookmarks(final Context context) throws FileNotFoundException {
+        FileInputStream backupFile = new FileInputStream(new File(Environment.getExternalStorageDirectory(), EXPORTED_BOOKMARKS_FILE));
+
+        ArrayList<Bookmark> bookmarks = readFileFromExternalStorage(backupFile);
+
+        Bookmark[] bookmarkArray = new Bookmark[bookmarks.size()];
+        bookmarkArray = bookmarks.toArray(bookmarkArray);
+
+        //Used to access the edit function.
+        if (bookmarks.size() > 0){
+            Bookmark bookmark = bookmarks.get(0);
+            bookmark.edit(context, bookmarkArray);
+
+            Extensions.showToast(context, "Bookmarks restored from "+Environment.getExternalStorageDirectory() + "/" + EXPORTED_BOOKMARKS_FILE);
+        }
+        else
+        {
+            Extensions.showToast(context,context.getString(R.string.invalid_bookmarks_message));
+        }
+
+    }
+
+    private static ArrayList<Bookmark> readFileFromExternalStorage(FileInputStream inputStream)
+    {
+        try
+        {
+
+            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
+
+            //read the bookmark(s) from the file
+            ArrayList<Bookmark> bookmarks = new ArrayList<>();
+            String b;
+            while ((b = bufferedreader.readLine()) != null)
+            {
+                String[] bsplit = b.split("\t");
+                if (bsplit.length > 1)
+                {
+                    //parse the bookmark
+                    Bookmark bookmark = new Bookmark(
+                            bsplit[0], //name
+                            bsplit[1], //url
+                            Integer.parseInt(bsplit[2]) //id
+                    );
+
+                    //add it to the list of bookmarks
+                    bookmarks.add(bookmark);
+                }
+            }
+
+            return bookmarks;
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
     }
 }

@@ -3,17 +3,28 @@
 
     <CheckBoxPreference
         android:key="monospace_font"
-        android:title="Monospace font"
-        android:summary="Whether or not the app will use a Monospace or a Serif font." />
+        android:title="@string/monospace_font"
+        android:summary="@string/monospace_font_summary" />
 
     <EditTextPreference
         android:key="font_size"
-        android:title="Font Size"
+        android:title="@string/font_size"
         android:inputType="number" />
 
     <EditTextPreference
         android:key="line_spacing"
-        android:title="Line spacing"
-        android:summary="Adjust the spaces between each line of text"
+        android:title="@string/line_spacing"
+        android:summary="@string/line_spacing_summary"
         android:inputType="number" />
+
+    <Preference
+        android:key="backup_bookmarks"
+        android:title="Backup Bookmarks"
+        android:summary="Save all of your bookmarks in a transferable file."/>
+
+    <Preference
+        android:key="restore_bookmarks"
+        android:title="Restore Bookmarks"
+        android:summary="Restore backed up bookmarks from a file."/>
+
 </PreferenceScreen>

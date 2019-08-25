@@ -58,7 +58,6 @@ public class Connection
         String line;
         try
         {
-
             //read until the end of the message (EOF or ".")
             while ((line = is.readLine()) != null && ! line.equals("."))
             {
