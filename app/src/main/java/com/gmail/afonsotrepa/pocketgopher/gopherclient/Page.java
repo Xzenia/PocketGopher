@@ -69,15 +69,7 @@ public abstract class Page implements Serializable
      */
     public void download(final Context context)
     {
-        //check for permission to save files in 6.0+
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    0
-            );
-        }
+        Extensions.showPermissionsDialog(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         //AlertDialog to be shown when method gets called
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
