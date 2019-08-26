@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.text.SpannableStringBuilder;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +29,6 @@ import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
 import java.io.IOException;
-import java.util.List;
 
 public class MenuActivity extends AppCompatActivity
 {
@@ -66,6 +65,8 @@ public class MenuActivity extends AppCompatActivity
                 //get info
                 Intent intent = getIntent();
 
+                final SpannableString content;
+
                 final Page page = (Page) intent.getSerializableExtra("page");
 
                 selector = page.selector;
@@ -82,15 +83,13 @@ public class MenuActivity extends AppCompatActivity
                     }
                 });
 
-                ///Network stuff
-                List<Page> lines;
                 try
                 {
                     //start new connection
                     Connection conn = new Connection(server, port);
 
                     //get the desired directory/menu
-                    lines = conn.getMenu(selector);
+                    content = conn.getMenu(selector, MenuActivity.this);
 
                 }
                 catch (final IOException e)
@@ -103,22 +102,13 @@ public class MenuActivity extends AppCompatActivity
                         public void run()
                         {
                             Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(),
-                                    Toast.LENGTH_LONG
-                            );
+                                    Toast.LENGTH_LONG);
                             toast.show();
                         }
                     });
                     //kill current activity (go back to the previous one on the stack)
                     finish();
                     return;
-                }
-
-                final SpannableStringBuilder pageContent = new SpannableStringBuilder("");
-
-                //render the lines on the screen
-                for (Page line : lines)
-                {
-                    pageContent.append(line.render(MenuActivity.this, line.line));
                 }
 
                 //make the progress bar invisible
@@ -129,10 +119,18 @@ public class MenuActivity extends AppCompatActivity
                     public void run()
                     {
                         progressBar.setVisibility(View.GONE);
-
-                        textView.setText(pageContent);
                     }
                 });
+
+                handler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        textView.setText(content);
+                    }
+                });
+
             }
         }).start();
     }

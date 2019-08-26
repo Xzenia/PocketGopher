@@ -33,11 +33,6 @@ public class AudioPage extends Page
         super(server, port, 's', selector, line);
     }
 
-    public AudioPage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
-    }
-
     public SpannableString render (final Context context, String line)
     {
         final SpannableString text = new SpannableString("  " + line + " \n");

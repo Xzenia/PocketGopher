@@ -19,7 +19,6 @@ public class UnknownPage extends Page
     public String line;
     private Character type;
 
-
     public UnknownPage(String line)
     {
         super(null, 0, '3', "", line);

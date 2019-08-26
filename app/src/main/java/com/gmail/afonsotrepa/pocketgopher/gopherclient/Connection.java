@@ -1,7 +1,8 @@
 package com.gmail.afonsotrepa.pocketgopher.gopherclient;
 
-
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,8 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Connection
 {
@@ -55,10 +54,10 @@ public class Connection
     private String read()
     {
         StringBuilder sb = new StringBuilder();
-        String line;
         try
         {
             //read until the end of the message (EOF or ".")
+            String line;
             while ((line = is.readLine()) != null && ! line.equals("."))
             {
                 sb.append(line).append('\n');
@@ -79,51 +78,61 @@ public class Connection
      *
      * @return the response from the server (as Page objects)
      */
-    public List<Page> getMenu(String selector)
+    public SpannableString getMenu(String selector, Context context)
     {
         this.write(selector); //send the selector
-        String lines[] = this.read().split("\n"); //read the response by the server
+        String[] lines = this.read().split("\n"); //read the response by the server
 
-        List<Page> response = new ArrayList<>();
-
+        SpannableStringBuilder spannableStringContent = new SpannableStringBuilder("");
         for (String line : lines)
         {
+            Page newPage;
             //skip empty line
             if (line.equals(""))
             {
                 continue;
             }
 
-            String[] linesplit = line.split("\t");
-            if (linesplit.length < 2)
+            String[] lineSplit = line.split("\t");
+            if (lineSplit.length < 2)
             {
-                response.add(Page.makePage(
+                newPage = Page.makePage(
                         line.charAt(0), //type
                         "",
                         "",
                         0,
-                        linesplit[0].substring(1) //remove the type tag
-                ));
+                        lineSplit[0].substring(1)); //remove the type tag
 
             }
-            else if (linesplit.length < 4)
+            else if (lineSplit.length < 4)
             {
-                response.add(new UnknownPage(line));
-
+                newPage = new UnknownPage(line);
             }
             else
             {
-                response.add(Page.makePage(
-                        line.charAt(0), //type
-                        linesplit[1],
-                        linesplit[2],
-                        Integer.parseInt(linesplit[3]),
-                        linesplit[0].substring(1) //remove the type tag
-                ));
+                try
+                {
+                    int port = Integer.parseInt(lineSplit[3]);
+
+                    newPage = Page.makePage(
+                            line.charAt(0), //type
+                            lineSplit[1],
+                            lineSplit[2],
+                            port,
+                            lineSplit[0].substring(1) //remove the type tag
+                    );
+                }
+                catch (Exception ex)
+                {
+                    newPage = new UnknownPage(line);
+                }
             }
+
+            SpannableString pageLine = newPage.render(context, newPage.line);
+            spannableStringContent.append(pageLine);
         }
 
-        return response;
+        return SpannableString.valueOf(spannableStringContent);
     }
 
     /**
@@ -137,13 +146,6 @@ public class Connection
     {
         this.write(selector); //send the selector
         return this.read();
-    }
-
-    Drawable getDrawable(String selector) throws IOException
-    {
-        this.write(selector); //send the selector
-        return Drawable.createFromStream(socket.getInputStream(), null);
-
     }
 
     /**
@@ -161,7 +163,7 @@ public class Connection
             InputStream is = this.socket.getInputStream();
             FileOutputStream os = new FileOutputStream(file);
 
-            int read = - 1;
+            int read;
             byte[] buf = new byte[4096]; //pretty small rn
 
             while ((read = is.read(buf)) != - 1)

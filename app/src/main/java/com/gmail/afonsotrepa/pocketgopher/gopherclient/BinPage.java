@@ -24,12 +24,6 @@ public class BinPage extends Page
         super(server, port, '9', selector, line);
     }
 
-    public BinPage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
-    }
-
-
     public SpannableString render(final Context context, String line)
     {
         final SpannableString text = new SpannableString("  " + line + " \n");

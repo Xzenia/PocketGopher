@@ -66,8 +66,6 @@ public class SearchPage extends Page
 
     public void open(final Context context)
     {
-        History.add(context, this.url);
-
         //AlertDialog to be shown when method gets called
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("Input search query");
@@ -90,7 +88,6 @@ public class SearchPage extends Page
                     {
                         //get the query
                         String query = input.getText().toString();
-
 
                         //make the line
                         MenuPage page = new MenuPage(

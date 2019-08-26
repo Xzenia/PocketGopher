@@ -12,7 +12,6 @@ import com.gmail.afonsotrepa.pocketgopher.History;
 import com.gmail.afonsotrepa.pocketgopher.R;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Activity.TextFileActivity;
 
-
 /**
  * Text File ('0')
  */
@@ -23,11 +22,6 @@ public class TextFilePage extends Page
     public TextFilePage(String selector, String server, Integer port, String line)
     {
         super(server, port, '0', selector, line);
-    }
-
-    public TextFilePage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
     }
 
     public SpannableString render(final Context context, String line)

@@ -35,12 +35,6 @@ public class ImagePage extends Page
         super(server, port, 'I', selector, line);
     }
 
-    public ImagePage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
-    }
-
-
     public SpannableString render(final Context context, String line)
     {
         final SpannableString text = new SpannableString("  " + line + " \n");

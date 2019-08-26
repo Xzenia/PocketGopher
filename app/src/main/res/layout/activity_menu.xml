@@ -13,7 +13,6 @@
         android:fillViewport="true"
         tools:context="com.gmail.afonsotrepa.pocketgopher.MainActivity">
 
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

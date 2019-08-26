@@ -34,12 +34,6 @@ public class VideoPage extends Page
         super(server, port, ';', selector, line);
     }
 
-    public VideoPage(String selector, String server, Integer port)
-    {
-        this(selector, server, port, null);
-    }
-
-
     public SpannableString render(final Context context, String line)
     {
         final SpannableString text = new SpannableString("  " + line + " \n");
