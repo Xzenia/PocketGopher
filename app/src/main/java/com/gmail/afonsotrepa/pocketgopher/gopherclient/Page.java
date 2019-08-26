@@ -1,21 +1,17 @@
 package com.gmail.afonsotrepa.pocketgopher.gopherclient;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
@@ -61,7 +57,7 @@ public abstract class Page implements Serializable
 
     public abstract void open(final Context context);
 
-    public abstract void render(final TextView textView, Context context, String line);
+    public abstract SpannableString render(Context context, String line);
     /**
      * Opens an interface for the user to download the page
      *

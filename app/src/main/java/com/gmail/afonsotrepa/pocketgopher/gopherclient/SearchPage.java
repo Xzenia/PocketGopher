@@ -3,8 +3,6 @@ package com.gmail.afonsotrepa.pocketgopher.gopherclient;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
@@ -12,7 +10,6 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.History;
@@ -33,9 +30,8 @@ public class SearchPage extends Page
         super(server, port, '7', selector, line);
     }
 
-    public void render(final TextView textView, final Context context, String line)
+    public SpannableString render(final Context context, String line)
     {
-        final Handler handler = new Handler(Looper.getMainLooper());
         final SpannableString text = new SpannableString("  " + line + " \n");
 
         final Page page = this;
@@ -58,21 +54,13 @@ public class SearchPage extends Page
             }
         };
 
-        //apply the span to text and append text to textview
-        handler.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                //make it clickable
-                text.setSpan(cs1, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(cs2, 2, text.length() - 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                //set the image tag behind (left of) the text
-                text.setSpan(new ImageSpan(context, IMAGE_TAG), 0, 1, 0);
-                //add it to the end of textView
-                textView.append(text);
-            }
-        });
+        //make it clickable
+        text.setSpan(cs1, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(cs2, 2, text.length() - 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //set the image tag behind (left of) the text
+        text.setSpan(new ImageSpan(context, IMAGE_TAG), 0, 1, 0);
+
+        return text;
     }
 
 

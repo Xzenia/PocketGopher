@@ -1,11 +1,7 @@
 package com.gmail.afonsotrepa.pocketgopher.gopherclient;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.History;
@@ -23,22 +19,10 @@ public class TextPage extends Page
         super(null, 0, 'i', selector, line);
     }
 
-    public void render(final TextView textView, Context context, String line)
+    public SpannableString render(Context context, String line)
     {
-
         final SpannableString text = new SpannableString(line + "\n");
-
-        final Handler handler = new Handler(Looper.getMainLooper());
-
-        //display the line
-        handler.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                textView.append(text);
-            }
-        });
+        return text;
     }
 
     public void open(Context context)

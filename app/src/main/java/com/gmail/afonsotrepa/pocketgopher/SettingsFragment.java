@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     Preference backupBookmarkPreference;

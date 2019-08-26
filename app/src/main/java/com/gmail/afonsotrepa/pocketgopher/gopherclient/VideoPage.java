@@ -12,7 +12,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.History;
@@ -41,10 +40,8 @@ public class VideoPage extends Page
     }
 
 
-    public void render(final TextView textView, final Context context, String line)
+    public SpannableString render(final Context context, String line)
     {
-        //handler to the main thread
-        final Handler handler = new Handler(Looper.getMainLooper());
         final SpannableString text = new SpannableString("  " + line + " \n");
 
         final Page page = this;
@@ -68,22 +65,13 @@ public class VideoPage extends Page
             }
         };
 
+        //make it clickable
+        text.setSpan(cs1, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(cs2, 2, text.length() - 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //set the image tag behind (left of) the text
+        text.setSpan(new ImageSpan(context, IMAGE_TAG), 0, 1, 0);
 
-        //apply the span to text and append text to textView
-        handler.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                //make it clickable
-                text.setSpan(cs1, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(cs2, 2, text.length() - 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                //set the image tag behind (left of) the text
-                text.setSpan(new ImageSpan(context, IMAGE_TAG), 0, 1, 0);
-                //add it to the end of textView
-                textView.append(text);
-            }
-        });
+        return text;
     }
 
 
@@ -93,7 +81,6 @@ public class VideoPage extends Page
 
         final ProgressBar progressBar = ((Activity) context).findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-
 
         //start a new thread to do network stuff
         new Thread(new Runnable()

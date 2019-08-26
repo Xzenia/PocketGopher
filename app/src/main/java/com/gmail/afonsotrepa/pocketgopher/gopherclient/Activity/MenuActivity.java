@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,9 +39,9 @@ public class MenuActivity extends AppCompatActivity
     String url;
 
     @Override
-    protected void onCreate(Bundle savedInstaceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstaceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         final TextView textView = findViewById(R.id.textView);
@@ -112,10 +113,12 @@ public class MenuActivity extends AppCompatActivity
                     return;
                 }
 
+                final SpannableStringBuilder pageContent = new SpannableStringBuilder("");
+
                 //render the lines on the screen
                 for (Page line : lines)
                 {
-                    line.render(textView, MenuActivity.this, line.line);
+                    pageContent.append(line.render(MenuActivity.this, line.line));
                 }
 
                 //make the progress bar invisible
@@ -126,6 +129,8 @@ public class MenuActivity extends AppCompatActivity
                     public void run()
                     {
                         progressBar.setVisibility(View.GONE);
+
+                        textView.setText(pageContent);
                     }
                 });
             }

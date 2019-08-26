@@ -173,11 +173,11 @@ public class Bookmark
             //clear the file
             context.openFileOutput(BOOKMARKS_FILE, Context.MODE_PRIVATE).write("".getBytes());
 
-            for (Bookmark b : bookmarks)
+            for (Bookmark bookmark : bookmarks)
             {
-                if (!b.id.equals(this.id))
+                if (!bookmark.id.equals(this.id))
                 {
-                    b.add(context);
+                    bookmark.add(context);
                 }
             }
 

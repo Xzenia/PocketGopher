@@ -132,7 +132,7 @@ public class TextFileActivity extends AppCompatActivity
                     @Override
                     public void run()
                     {
-                        textView.append(lines);
+                        textView.setText(lines);
                     }
                 });
 
