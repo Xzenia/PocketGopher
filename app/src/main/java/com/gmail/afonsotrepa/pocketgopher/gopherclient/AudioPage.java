@@ -96,8 +96,16 @@ public class AudioPage extends Page
                     //start new connection
                     Connection conn = new Connection(server, port);
 
-                    //get the desired video
+                    //get the desired audio
                     conn.getBinary(selector, file);
+
+                    //make and start an intent to call the media player
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //needed for API 19
+                    intent.setDataAndType(Uri.fromFile(file), "audio/*");
+                    ((Activity) context).setResult(Activity.RESULT_OK, intent);
+                    context.startActivity(intent);
 
 
                 }
@@ -130,14 +138,6 @@ public class AudioPage extends Page
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-
-                //make and start an intent to call the media player
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //needed for API 19
-                intent.setDataAndType(Uri.fromFile(file), "audio/*");
-                ((Activity) context).setResult(Activity.RESULT_OK, intent);
-                context.startActivity(intent);
             }
         }).start();
     }

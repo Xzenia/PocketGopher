@@ -1,13 +1,10 @@
 package com.gmail.afonsotrepa.pocketgopher.gopherclient.Activity;
 
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.SpannableString;
@@ -105,7 +102,7 @@ public class MenuActivity extends AppCompatActivity
             super.onPostExecute(result);
 
             progressBar.setVisibility(View.GONE);
-            textView.append(result);
+            textView.setText(result);
         }
     }
 

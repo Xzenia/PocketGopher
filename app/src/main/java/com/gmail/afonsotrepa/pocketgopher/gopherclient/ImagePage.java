@@ -86,7 +86,6 @@ public class ImagePage extends Page
                 //handler to the main thread
                 final Handler handler = new Handler(Looper.getMainLooper());
 
-                ///Network stuff to save the video to cache
                 File file = new File(context.getExternalCacheDir() + "/" +
                         context.getPackageName().replace('/', '-'));
                 try
@@ -97,9 +96,16 @@ public class ImagePage extends Page
                     //start new connection
                     Connection conn = new Connection(server, port);
 
-                    //get the desired video
+                    //get the desired image
                     conn.getBinary(selector, file);
 
+                    //make and start an intent to call the image viewer
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //needed for API 19
+                    intent.setDataAndType(Uri.fromFile(file), "image/*");
+                    ((Activity) context).setResult(Activity.RESULT_OK, intent);
+                    context.startActivity(intent);
 
                 }
                 catch (final IOException e)
@@ -121,7 +127,6 @@ public class ImagePage extends Page
                     return;
                 }
 
-
                 handler.post(new Runnable()
                 {
                     @Override
@@ -132,13 +137,7 @@ public class ImagePage extends Page
                     }
                 });
 
-                //make and start an intent to call the media player
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //needed for API 19
-                intent.setDataAndType(Uri.fromFile(file), "image/*");
-                ((Activity) context).setResult(Activity.RESULT_OK, intent);
-                context.startActivity(intent);
+
             }
         }).start();
     }

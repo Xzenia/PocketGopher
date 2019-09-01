@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +24,6 @@ import com.gmail.afonsotrepa.pocketgopher.gopherclient.Connection;
 import com.gmail.afonsotrepa.pocketgopher.gopherclient.Page;
 
 import java.io.IOException;
-
-
-/**
- *
- */
 
 public class TextFileActivity extends AppCompatActivity
 {
@@ -103,7 +97,7 @@ public class TextFileActivity extends AppCompatActivity
             super.onPostExecute(result);
 
             progressBar.setVisibility(View.GONE);
-            textView.append(result);
+            textView.setText(result);
         }
     }
 

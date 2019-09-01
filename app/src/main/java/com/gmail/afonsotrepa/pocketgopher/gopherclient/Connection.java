@@ -70,7 +70,6 @@ public class Connection
         return sb.toString();
     }
 
-
     /**
      * Sends the selector to the server and returns the response (expects a directory/menu)
      *

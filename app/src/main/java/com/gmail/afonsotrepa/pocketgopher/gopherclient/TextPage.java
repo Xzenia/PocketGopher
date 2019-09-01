@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.History;
 
-
 /**
  * Simple informational text line ('i')
  */
