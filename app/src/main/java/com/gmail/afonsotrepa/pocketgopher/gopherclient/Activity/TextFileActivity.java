@@ -3,9 +3,8 @@ package com.gmail.afonsotrepa.pocketgopher.gopherclient.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gmail.afonsotrepa.pocketgopher.Bookmark;
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
@@ -41,104 +39,72 @@ public class TextFileActivity extends AppCompatActivity
     Integer port;
     String url;
 
+    ProgressBar progressBar;
+    TextView textView;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu); //same layout as MenuActivity
 
-        //widget to write to
-        final TextView textView = findViewById(R.id.textView);
+        progressBar = findViewById(R.id.progressBar);
+
+        textView = findViewById(R.id.textView);
+
         //set the font
-        textView.setTextAppearance(this, MainActivity.font);
+        textView.setTextAppearance(TextFileActivity.this, MainActivity.font);
 
         textView.setLineSpacing(MainActivity.lineSpacing, 1);
         textView.setTextSize(MainActivity.fontSize);
 
-        //Make Gopher links selectable.
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        //intent stuff
+        Intent intent = getIntent();
 
-        //start a new thread to do network stuff
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                final Handler handler = new Handler(Looper.getMainLooper());
+        page = (Page) intent.getSerializableExtra("page");
+        selector = page.selector;
+        server = page.server;
+        port = page.port;
+        url = page.url;
 
-                //intent stuff
-                Intent intent = getIntent();
+        new GetGopherText().execute("","","");
+    }
 
-                page = (Page) intent.getSerializableExtra("page");
-                selector = page.selector;
-                server = page.server;
-                port = page.port;
-                url = page.url;
+    private class GetGopherText extends AsyncTask<String, Void, String>{
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
-                handler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        setTitle(url);
-                    }
-                });
+        @Override
+        protected void onProgressUpdate(Void...values) {
+            super.onProgressUpdate(values);
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
-                ///Network stuff
-                final String lines;
-                try
-                {
-                    //start new connection
-                    Connection conn = new Connection(server, port);
+        @Override
+        protected String doInBackground(String... strings) {
+            //start new connection
+            Connection conn;
+            String lines = "";
 
-                    //get the desired text file
-                    lines = conn.getText(selector);
-
-                    //make the progress bar invisible
-                    final ProgressBar progressBar = findViewById(R.id.progressBar);
-                    handler.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-
-                }
-                catch (final IOException e)
-                {
-                    e.printStackTrace();
-                    //inform the user of the error
-                    handler.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(),
-                                    Toast.LENGTH_LONG
-                            );
-                            toast.show();
-                        }
-                    });
-                    //kill current activity (go back to the previous one on the stack)
-                    finish();
-                    return;
-                }
-
-                //render the lines on the screen
-                handler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        textView.setText(lines);
-                    }
-                });
-
+            try {
+                conn = new Connection(server, port);
+                lines = conn.getText(selector);
+            } catch (IOException e) {
+                e.printStackTrace();
+                TextFileActivity.this.finish();
             }
-        }).start();
 
+            return lines;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+
+            progressBar.setVisibility(View.GONE);
+            textView.append(result);
+        }
     }
 
     //setup the menu/title bar

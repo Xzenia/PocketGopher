@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.gmail.afonsotrepa.pocketgopher.Extensions;
-import com.gmail.afonsotrepa.pocketgopher.History;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 import com.gmail.afonsotrepa.pocketgopher.R;
 
@@ -66,7 +65,7 @@ public class SearchPage extends Page
 
     public void open(final Context context)
     {
-        //AlertDialog to be shown when method gets called
+         //AlertDialog to be shown when method gets called
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("Input search query");
 

@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.gmail.afonsotrepa.pocketgopher.Extensions;
 import com.gmail.afonsotrepa.pocketgopher.MainActivity;
 
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.Serializable;
 
