@@ -82,8 +82,22 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        fontSize = sharedPreferences.getInt(MainActivity.FONT_SIZE, 12);
-        lineSpacing = sharedPreferences.getInt(MainActivity.LINE_SPACING, 12);
+        try
+        {
+            fontSize = sharedPreferences.getInt(MainActivity.FONT_SIZE, 12);
+            lineSpacing = sharedPreferences.getInt(MainActivity.LINE_SPACING, 12);
+        }
+        catch (Exception e)
+        {
+            editor.putInt(MainActivity.FONT_SIZE, 12);
+            editor.putInt(MainActivity.LINE_SPACING, 12);
+
+            editor.apply();
+
+            fontSize = sharedPreferences.getInt(MainActivity.FONT_SIZE, 12);
+            lineSpacing = sharedPreferences.getInt(MainActivity.LINE_SPACING, 12);
+        }
+
     }
 
     @Override
