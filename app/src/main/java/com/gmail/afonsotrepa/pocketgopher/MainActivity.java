@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity
     //SharedPreferences keys
     private static final String MONOSPACE_FONT_SETTING = "monospace_font";
     private static final String FIRST_RUN = "first_run";
-    private static final String FONT_SIZE = "font_size";
-    private static final String LINE_SPACING = "line_spacing";
+    public static final String FONT_SIZE = "font_size";
+    public static final String LINE_SPACING = "line_spacing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -82,23 +82,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        try
-        {
-            fontSize = Integer.parseInt(sharedPreferences.getString(FONT_SIZE, "12"));
-            lineSpacing = Integer.parseInt(sharedPreferences.getString(LINE_SPACING, "12"));
-        }
-        catch (Exception ex)
-        {
-            //Triggers when input either fontSize or lineSpacing is not an integer.
-            Log.e("MainActivity", ex.toString());
-
-            editor.putString(FONT_SIZE, "12");
-            editor.putString(LINE_SPACING, "12");
-            editor.apply();
-
-            fontSize = Integer.parseInt(sharedPreferences.getString(FONT_SIZE, "12"));
-            lineSpacing = Integer.parseInt(sharedPreferences.getString(LINE_SPACING, "12"));
-        }
+        fontSize = sharedPreferences.getInt(MainActivity.FONT_SIZE, 12);
+        lineSpacing = sharedPreferences.getInt(MainActivity.LINE_SPACING, 12);
     }
 
     @Override
@@ -185,7 +170,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
 
     //setup the menu/title bar
     @Override

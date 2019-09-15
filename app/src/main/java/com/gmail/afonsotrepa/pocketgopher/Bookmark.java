@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,9 +90,9 @@ public class Bookmark
                     Context.MODE_APPEND);
 
             outputStream.write((
-                    this.name + "\t" +
-                            this.url + "\t" +
-                            this.id.toString() + "\n"
+                                this.name + "\t" +
+                                URLEncoder.encode(this.url, "UTF-8") + "\t" +
+                                this.id.toString() + "\n"
             ).getBytes());
             outputStream.close();
         }
@@ -110,9 +112,9 @@ public class Bookmark
             for (Bookmark bookmark : bookmarks)
             {
                 outputStream.write((
-                        bookmark.name + "\t" +
-                                bookmark.url + "\t" +
-                                bookmark.id.toString() + "\n"
+                                    bookmark.name + "\t" +
+                                    bookmark.url + "\t" +
+                                    bookmark.id.toString() + "\n"
                 ).getBytes());
             }
 
@@ -147,7 +149,7 @@ public class Bookmark
                     //parse the bookmark
                     Bookmark bookmark = new Bookmark(
                             bsplit[0], //name
-                            bsplit[1], //url
+                            URLDecoder.decode(bsplit[1], "UTF-8"), //url
                             Integer.parseInt(bsplit[2]) //id
                     );
 
@@ -401,9 +403,9 @@ public class Bookmark
                 for (Bookmark bookmark : bookmarkArrayList)
                 {
                     outputStream.write((
-                            bookmark.name + "\t" +
-                                    bookmark.url + "\t" +
-                                    bookmark.id.toString() + "\n"
+                                        bookmark.name + "\t" +
+                                        URLEncoder.encode(bookmark.url, "UTF-8") + "\t" +
+                                        bookmark.id.toString() + "\n"
                     ).getBytes());
                 }
 
@@ -449,7 +451,6 @@ public class Bookmark
     {
         try
         {
-
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
 
             //read the bookmark(s) from the file
@@ -463,7 +464,7 @@ public class Bookmark
                     //parse the bookmark
                     Bookmark bookmark = new Bookmark(
                             bsplit[0], //name
-                            bsplit[1], //url
+                            URLDecoder.decode(bsplit[1], "UTF-8"), //url
                             Integer.parseInt(bsplit[2]) //id
                     );
 

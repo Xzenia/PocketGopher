@@ -6,16 +6,14 @@
         android:title="@string/monospace_font"
         android:summary="@string/monospace_font_summary" />
 
-    <EditTextPreference
+    <Preference
         android:key="font_size"
-        android:title="@string/font_size"
-        android:inputType="number" />
+        android:title="@string/font_size" />
 
-    <EditTextPreference
+    <Preference
         android:key="line_spacing"
         android:title="@string/line_spacing"
-        android:summary="@string/line_spacing_summary"
-        android:inputType="number" />
+        android:summary="@string/line_spacing_summary" />
 
     <Preference
         android:key="backup_bookmarks"
