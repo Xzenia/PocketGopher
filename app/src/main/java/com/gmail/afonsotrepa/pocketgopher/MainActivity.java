@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,8 +49,8 @@ public class MainActivity extends AppCompatActivity
         {
             //Set initial values in the SharedPreferences.
             editor.putBoolean(MONOSPACE_FONT_SETTING, true);
-            editor.putString(FONT_SIZE, "12");
-            editor.putString(LINE_SPACING, "12");
+            editor.putInt(FONT_SIZE, 12);
+            editor.putInt(LINE_SPACING, 12);
 
             editor.putBoolean(FIRST_RUN, false);
             editor.apply();
@@ -224,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(final DialogInterface dialog, int which)
                             {
                                 //setup the page
-                                if (input.getText().toString().trim().length() > 0)
+                                if (!input.getText().toString().isEmpty())
                                 {
                                     Page page = Page.makePage(input.getText().toString());
                                     page.open(MainActivity.this);
